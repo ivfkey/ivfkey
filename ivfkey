@@ -1,1 +1,96 @@
 https://github.com/ivfkey/ivfkey.git
+import React, { useState } from "react";
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+const ageBands = [">20", "25-29", "30-34", "35-39", ">40"];
+const follicleBands = [" 20"];
+const probabilities = {
+"25-29": { " 20": 40 },
+"30-34": { " 20": 42 },
+"35-39": { " 20": 40 },
+">40": { " 20": 17 },
+};
+const App = () => {
+const [ageBand, setAgeBand] = useState("");
+const [follicleBand, setFollicleBand] = useState("");
+const [probability, setProbability] = useState(null);
+const handleCalculate = () => {
+if (ageBand && follicleBand) {
+setProbability(probabilities[ageBand][follicleBand]);
+}
+};
+return (
+Probability Calculator
+Age Band:
+{ageBands.map((band) => (
+{band}
+))}
+Follicle Band:
+{follicleBands.map((band) => (
+{band}
+))}
+Calculate
+{probability !== null && (
+Probability Result:
+{probability}
+)}
+);
+};
+export default App;
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const ageBands = [">20", "25-29", "30-34", "35-39", ">40"];
+const follicleBands = ["<6", "6-11", "12-20", ">20"];
+const probabilities = {
+  "25-29": { "<6": "NA", "6-11": "NA", "12-20": 28, ">20": 40 },
+  "30-34": { "<6": 67, "6-11": 56, "12-20": 41, ">20": 42 },
+  "35-39": { "<6": "NA", "6-11": 43, "12-20": 33, ">20": 40 },
+  ">40": { "<6": "NA", "6-11": 17, "12-20": 17, ">20": 17 },
+};
+
+export default function IVFCalculator() {
+  const [ageBand, setAgeBand] = useState("");
+  const [follicleBand, setFollicleBand] = useState("");
+  const [result, setResult] = useState(null);
+
+  const calculateProbability = () => {
+    if (ageBand && follicleBand && probabilities[ageBand] && probabilities[ageBand][follicleBand] !== undefined) {
+      setResult(`Estimated success rate: ${probabilities[ageBand][follicleBand]}%`);
+    } else {
+      setResult("No data available for selected criteria.");
+    }
+  };
+
+  return (
+    <div className="p-4 space-y-4">
+      <Card>
+        <CardContent className="space-y-4">
+          <h2 className="text-xl font-bold">IVF Success Predictor</h2>
+          <Select onValueChange={setAgeBand}>
+            <SelectTrigger><SelectValue placeholder="Select Age Band" /></SelectTrigger>
+            <SelectContent>
+              {ageBands.map((band) => (
+                <SelectItem key={band} value={band}>{band}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select onValueChange={setFollicleBand}>
+            <SelectTrigger><SelectValue placeholder="Select Follicle Count Band" /></SelectTrigger>
+            <SelectContent>
+              {follicleBands.map((band) => (
+                <SelectItem key={band} value={band}>{band}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button onClick={calculateProbability}>Calculate</Button>
+          {result && <p className="text-lg font-semibold mt-2">{result}</p>}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
